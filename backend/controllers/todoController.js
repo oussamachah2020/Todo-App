@@ -4,7 +4,7 @@ const Todo = require("../models/todoModel");
 const setTask = asyncHandler(async (req, res) => {
   const TaskTodo = await Todo.create({
     user: req.user.id,
-    todo: req.body.todo,
+    todo: req.body.text,
   });
 
   if (TaskTodo) {
