@@ -21,4 +21,28 @@ const getTasks = asyncHandler(async (req, res) => {
   res.status(200).json({ Tasks });
 });
 
-module.exports = { setTask, getTasks };
+const deleteTask = asyncHandler(async (req, res) => {
+  const deleteTask = await Todo.findByIdAndRemove(req.params.id, req.body);
+
+  const task = await Todo.findById(req.params.id);
+
+  if (!task) {
+    res.status(404);
+    throw new Error("task not found");
+  }
+
+//   //? check for user
+  if (!req.user) {
+    res.status(401);
+    throw new Error("user not found");
+  }
+
+  if (task.user.toString() !== req.user.id) {
+    res.status(401);
+    throw new Error("user not authorized");
+  }
+
+  res.status(200).json({ deleteTask });
+});
+
+module.exports = { setTask, getTasks, deleteTask };
